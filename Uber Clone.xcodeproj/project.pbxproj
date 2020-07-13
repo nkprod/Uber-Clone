@@ -13,6 +13,8 @@
 		7FA28FC724B7D6E000E92C3C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FA28FC524B7D6E000E92C3C /* Main.storyboard */; };
 		7FA28FC924B7D6E400E92C3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7FA28FC824B7D6E400E92C3C /* Assets.xcassets */; };
 		7FA28FCC24B7D6E400E92C3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7FA28FCA24B7D6E400E92C3C /* LaunchScreen.storyboard */; };
+		7FA28FE524B7D8AA00E92C3C /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA28FE424B7D8AA00E92C3C /* LoginController.swift */; };
+		7FA2902B24B8E16800E92C3C /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FA2902A24B8E16800E92C3C /* Extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		7FA28FC824B7D6E400E92C3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		7FA28FCB24B7D6E400E92C3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7FA28FCD24B7D6E400E92C3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7FA28FE424B7D8AA00E92C3C /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		7FA2902A24B8E16800E92C3C /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,6 +93,7 @@
 		7FA28FE124B7D7A200E92C3C /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				7FA28FE424B7D8AA00E92C3C /* LoginController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -103,6 +108,7 @@
 		7FA28FE324B7D7B200E92C3C /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				7FA2902A24B8E16800E92C3C /* Extensions.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -178,7 +184,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7FA2902B24B8E16800E92C3C /* Extensions.swift in Sources */,
 				7FA28FC424B7D6E000E92C3C /* ViewController.swift in Sources */,
+				7FA28FE524B7D8AA00E92C3C /* LoginController.swift in Sources */,
 				7FA28FC024B7D6E000E92C3C /* AppDelegate.swift in Sources */,
 				7FA28FC224B7D6E000E92C3C /* SceneDelegate.swift in Sources */,
 			);
