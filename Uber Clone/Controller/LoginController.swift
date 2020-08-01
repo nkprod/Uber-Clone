@@ -6,6 +6,7 @@
 //  Copyright © 2020 Nulrybek Karshyga. All rights reserved.
 //
 import UIKit
+import Firebase
 
 class LoginController: UIViewController, UITextFieldDelegate {
     
@@ -13,31 +14,53 @@ class LoginController: UIViewController, UITextFieldDelegate {
 
     private let uberTitleLabel: UILabel = {
         let label = UILabel()
-        label.text = "MyApp"
+        label.text = "UBER"
         label.textColor = .white
         label.font = UIFont(name: "Avenir-Light", size: 36)
         return label
     }()
-    
-    private let usernameTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Username"
-        return textField
+
+    private lazy var emailContainerView: UIView = {
+        let view = UIView().instantiateView(image: #imageLiteral(resourceName: "ic_mail_outline_white_2x"), textField: emailTextField)
+        view.anchor(height: 50)
+        return view
     }()
     
+    private let emailTextField: UITextField = {
+        return UITextField().textField(withPlaceholder: "Email", isSecureTextEntry: false)
+    }()
+    
+    private lazy var passwordContainerView: UIView = {
+        let view = UIView().instantiateView(image: #imageLiteral(resourceName: "ic_lock_outline_white_2x"), textField: passwordTextField)
+        view.anchor(height: 50)
+        return view
+    }()
+
     private let passwordTextField: UITextField = {
-        let textField = UITextField()
-        textField.placeholder = "Password"
-        return textField
+        return UITextField().textField(withPlaceholder: "Password", isSecureTextEntry: true)
     }()
     
-    private let loginButton: UIButton = {
-        let button = UIButton()
-        button.backgroundColor = UIColor.lightGray
-        button.layer.cornerRadius = 10
+    private let loginButton: AuthButton = {
+        let button = AuthButton(type: .system)
+        button.setTitle("Login", for: .normal)
+        button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
+        button.addTarget(self, action: #selector(handleLogin), for: .touchUpInside)
         return button
     }()
     
+    private let dontHaveAccountButton: UIButton = {
+        let button = UIButton(type: .system)
+        let attributedTitle = NSMutableAttributedString(string: "Don't have an account? ", attributes:
+            [NSAttributedString.Key.font : UIFont.systemFont(ofSize: 16),
+             NSAttributedString.Key.foregroundColor : UIColor.lightGray])
+        
+        attributedTitle.append(NSAttributedString(string: "Sign Up", attributes:
+            [NSAttributedString.Key.font : UIFont.boldSystemFont(ofSize: 16),
+             NSAttributedString.Key.foregroundColor : UIColor.mainBlueTint]))
+        button.addTarget(self, action: #selector(handleShowSignUp), for: .touchUpInside)
+        button.setAttributedTitle(attributedTitle, for: .normal)
+        return button
+    }()
     // delegate methods
 
     
@@ -45,52 +68,58 @@ class LoginController: UIViewController, UITextFieldDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = UIColor.init(red: 25/255, green: 25/255, blue: 25/255, alpha: 1)
-        view.addSubview(uberTitleLabel)
-        view.addSubview(usernameTextField)
-        view.addSubview(passwordTextField)
-        view.addSubview(loginButton)
+        configureUI()
+    }
+    
+
+    // MARK: Helper funcitons
+    
+    func configureUI() {
         
+        configureNaviagtionController()
+         
+        view.backgroundColor = .backgroundColor
+        view.addSubview(uberTitleLabel)
         uberTitleLabel.anchor(top: view.safeAreaLayoutGuide.topAnchor, paddingTop: 40)
         uberTitleLabel.centerX(inView: view)
-        
-        
-        usernameTextField.anchor(top: uberTitleLabel.bottomAnchor, paddingTop: 200, width: view.frame.width - 40)
-        usernameTextField.centerX(inView: view)
-        usernameTextField.borderStyle = UITextField.BorderStyle.roundedRect
-
-        
-        passwordTextField.anchor(top: usernameTextField.bottomAnchor, paddingTop: 0, width: view.frame.width - 40)
-        passwordTextField.centerX(inView: view)
-        passwordTextField.borderStyle = UITextField.BorderStyle.roundedRect
-        
-        loginButton.anchor(top: passwordTextField.bottomAnchor, paddingTop: 20, width: view.frame.width - 40)
-        loginButton.centerX(inView: view)
-        loginButton.setTitle("Login", for: .normal)
-        loginButton.addTarget(self, action: #selector(loginPressed(_:)), for: .touchUpInside)
-
-        let gesture = UITapGestureRecognizer.init(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(gesture)
-        
+         
+        let stackView = UIStackView(arrangedSubviews: [emailContainerView,
+                                                        passwordContainerView,
+                                                         loginButton])
+        stackView.axis = .vertical
+        stackView.distribution = .fillEqually
+        stackView.spacing = 16
+         
+        view.addSubview(stackView)
+         
+        stackView.anchor(top: uberTitleLabel.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 40, paddingLeft: 16, paddingRight: 16)
+        view.addSubview(dontHaveAccountButton)
+        dontHaveAccountButton.centerX(inView: view)
+        dontHaveAccountButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor)
     }
     
-
-    @objc func loginPressed(_ sender: UIButton) {
-        print(usernameTextField.text)
-        print(passwordTextField.text)
-        hideKeyboard()
+    func configureNaviagtionController() {
+        navigationController?.navigationBar.isHidden = true
+        navigationController?.navigationBar.barStyle = .black
     }
     
-    @objc func hideKeyboard() {
-        passwordTextField.resignFirstResponder()
-        usernameTextField.resignFirstResponder()
+    // MARK: Selectors
+    @objc func handleLogin() {
+        guard let email = emailTextField.text else { return }
+        guard let password = passwordTextField.text else { return }
+        Auth.auth().signIn(withEmail: email, password: password) { (data, error) in
+            if let error = error {
+                print("Failed to log user in with error \(error.localizedDescription)")
+                return
+            }
+            print("Successfully signed user in ...")
+        }
     }
     
     
-    func textFieldDidBeginEditing(_ textField: UITextField) {
-        textField.backgroundColor = .lightGray
+    @objc func handleShowSignUp() {
+        let controller = SignUpController()
+        navigationController?.pushViewController(controller, animated: true)
     }
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.backgroundColor = .darkGray
-    }
+    
 }
